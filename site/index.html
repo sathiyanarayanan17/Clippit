@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clippit: is this message a scam?</title>
-  <meta name="description" content="Clippit checks a suspicious message on your device. Nothing is sent anywhere.">
+  <title>Clippit: stops you before you pay a scammer</title>
+  <meta name="description" content="Clippit stays quiet until a page or message looks like a scam, then explains why and pauses the Pay button. Runs on your device. Nothing is sent anywhere.">
   <meta name="theme-color" content="#b3261e">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon-192.png">
@@ -13,26 +13,82 @@
 <body>
   <a class="skip" href="#check">Skip to the checker</a>
 
-  <header>
-    <h1><span aria-hidden="true">&#x1F6E1;&#xFE0F;</span> Clippit</h1>
-    <p class="tag">The assistant we hated is the one we needed.</p>
+  <!-- Original mascot (not any existing character): a shield with a worried eyebrow -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="mascot" viewBox="0 0 120 140">
+      <path d="M60 6c14 10 30 14 48 14v46c0 36-22 58-48 68C34 124 12 102 12 66V20c18 0 34-4 48-14z" fill="#b3261e"/>
+      <path d="M60 16c11 8 24 12 38 13v37c0 29-17 47-38 56-21-9-38-27-38-56V29c14-1 27-5 38-13z" fill="#fff"/>
+      <circle cx="44" cy="62" r="9" fill="#1b1b1f"/><circle cx="76" cy="62" r="9" fill="#1b1b1f"/>
+      <circle cx="47" cy="59" r="3" fill="#fff"/><circle cx="79" cy="59" r="3" fill="#fff"/>
+      <path d="M32 52l22-8" stroke="#1b1b1f" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M88 52l-22-8" stroke="#1b1b1f" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M46 92c9-7 19-7 28 0" stroke="#1b1b1f" stroke-width="5" stroke-linecap="round" fill="none"/>
+    </symbol>
+  </svg>
+
+  <header class="bar">
+    <a class="brand" href="#top"><svg class="mini" aria-hidden="true"><use href="#mascot"/></svg> Clippit</a>
     <nav aria-label="Sections">
+      <a href="#how">How it works</a>
       <a href="#check">Check a message</a>
       <a href="#practice">Practice</a>
       <a href="#get">Get Clippit</a>
-      <a href="#about">How it works</a>
     </nav>
-    <label class="bigtoggle"><input type="checkbox" id="bigMode"> Big text (Grandpa Mode)</label>
-    <label class="bigtoggle">Language / भाषा / மொழி
-      <select id="lang">
-        <option value="en">English</option>
-        <option value="hi">हिन्दी (Hindi)</option>
-        <option value="ta">தமிழ் (Tamil)</option>
-      </select>
-    </label>
+    <div class="controls">
+      <label class="bigtoggle"><input type="checkbox" id="bigMode"> Big text</label>
+      <label class="bigtoggle"><span>Language / भाषा / மொழி</span>
+        <select id="lang">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+        </select>
+      </label>
+    </div>
   </header>
 
-  <main>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-h">
+      <div class="hero-text">
+        <p class="eyebrow">Kiroween 2026 &middot; Resurrection</p>
+        <h1 id="hero-h">The assistant we hated is the one we needed.</h1>
+        <p class="lead">Clippy interrupted people who did not need help. Clippit keeps the interrupting and aims it at the one moment it helps: right before you send money to a scammer.</p>
+        <div class="row">
+          <a class="btn primary" href="#check">Check a suspicious message</a>
+          <a class="btn" href="#get">Get Clippit</a>
+        </div>
+        <p class="fine">Runs on your device. No account. Nothing is sent anywhere.</p>
+      </div>
+
+      <!-- Illustration of the payment pause (a picture, not a real payment page) -->
+      <figure class="demo" aria-label="Illustration: Clippit pauses a payment on a scam page">
+        <div class="fakepage">
+          <div class="fakebar"><span></span><span></span><span></span></div>
+          <p class="fakehead">&#x1F3E6; Secure Verification</p>
+          <p class="fakemsg">Officer Verma, cyber cell: you are under <mark>digital arrest</mark>. <mark>Do not tell anyone.</mark> Transfer Rs 85,000 to the <mark>safe account</mark> <mark>immediately</mark>.</p>
+          <div class="fakebtn">Pay Now</div>
+          <div class="pause">
+            <div class="pcard">
+              <svg class="pm" aria-hidden="true"><use href="#mascot"/></svg>
+              <p class="pt">It looks like you're about to be robbed. Want help?</p>
+              <p class="ps">Digital-arrest script &middot; no police ever ask for money on a call</p>
+              <div class="pb"><span class="ok">Cancel payment</span><span>Ask family</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption>What you see when a scam page tries to take your money.</figcaption>
+      </figure>
+    </section>
+
+    <section id="how" aria-labelledby="how-h">
+      <h2 id="how-h">How it works</h2>
+      <div class="cols three">
+        <div class="box"><h3>1. Silent by default</h3><p>It reads the page on your device and says nothing unless it clearly looks like a scam. A false alarm is worse than a miss.</p></div>
+        <div class="box"><h3>2. Explains in plain words</h3><p>It names the scam, marks the exact scary phrases, and says what usually happens next and what to do now.</p></div>
+        <div class="box"><h3>3. Pauses the payment</h3><p>Only on a scam page, the Pay button waits. You can cancel, ask family on WhatsApp, or continue. Continue always works.</p></div>
+      </div>
+      <p class="note">Covers digital-arrest threats, fake KYC and bank links, "safe account" requests, OTP theft, fake parcel fees, and scams aimed at shops: fake supplier bank changes, "payment done" tricks, and QR "receive money" tricks. English, Hinglish and Hindi text is understood. The screens are available in English, Hindi and Tamil.</p>
+    </section>
+
     <section id="check" aria-labelledby="check-h">
       <h2 id="check-h">Is this message a scam?</h2>
       <p>Paste the message below. The check runs in this page, on your device. Nothing is sent or saved.</p>
@@ -54,10 +110,10 @@
 
     <section id="get" aria-labelledby="get-h">
       <h2 id="get-h">Get Clippit</h2>
-      <div class="cols">
+      <div class="cols three">
         <div class="box">
-          <h3>On a computer: the browser extension</h3>
-          <p>It stays quiet until a page looks like a scam. Then it pauses the Pay button before money moves.</p>
+          <h3>Browser extension</h3>
+          <p>The only version that can pause a payment.</p>
           <ol>
             <li>Download the <code>extension</code> folder from the project.</li>
             <li>Open <code>chrome://extensions</code> and turn on Developer mode.</li>
@@ -65,34 +121,34 @@
           </ol>
         </div>
         <div class="box">
-          <h3>On a phone: add this page to your home screen</h3>
-          <p>On Android, open this page in Chrome and choose "Install app". Then, on any suspicious SMS or WhatsApp message, tap Share and pick Clippit. It checks the message at once.</p>
-          <p class="note">The phone version only checks messages you share. It cannot read your messages or stop a payment. The extension is the only part that pauses a payment. Sharing to an installed web app works best on Android; support on iPhone is limited.</p>
+          <h3>Android app</h3>
+          <p>Share any suspicious message to Clippit, or select text and choose Clippit. It reads warnings aloud and has no internet permission.</p>
+          <p class="note">Build it with <code>node mobile/build.js</code>, or install the APK from the project's releases page if one is published.</p>
+        </div>
+        <div class="box">
+          <h3>This web page on a phone</h3>
+          <p>Open this page in Chrome on Android and choose "Install app". Then share a message to it.</p>
+          <p class="note">It only checks messages you share. It cannot read your messages or stop a payment. Sharing works best on Android; iPhone support is limited.</p>
           <button id="installBtn" hidden>Install on this device</button>
         </div>
       </div>
     </section>
 
     <section id="about" aria-labelledby="about-h">
-      <h2 id="about-h">How it works</h2>
-      <ul>
-        <li>About 30 signals, such as fake authority, urgency, secrecy, OTP requests and odd links.</li>
-        <li>It understands warnings. "Never share your OTP" from a real bank is not flagged.</li>
-        <li>Everything runs on your device. No account, no server, no tracking.</li>
-      </ul>
-      <h3>Honest limits</h3>
+      <h2 id="about-h">Honest limits</h2>
       <ul>
         <li>It cannot hear phone calls.</li>
-        <li>New wording can fool the rules.</li>
-        <li>It was tested on a small set of hand-written messages, not real traffic.</li>
+        <li>New wording can fool the rules, and spelling in Hinglish varies a lot.</li>
+        <li>It was tested on small, hand-written sets of messages, not real traffic, so the numbers are only a guide.</li>
         <li>"No signals found" does not prove a message is safe. If in doubt, call your bank on the number printed on your card.</li>
+        <li>Explanations are still English in the Hindi and Tamil screens. The Hindi and Tamil text should be reviewed by native speakers.</li>
       </ul>
       <p><strong>If money was lost, call 1930</strong> (India's national cybercrime helpline) right away.</p>
     </section>
   </main>
 
   <footer>
-    <p>Built for Kiroween. Clippit brings back the interrupting assistant, and aims it at the one moment interruption helps.</p>
+    <p>Built for Kiroween 2026 with Kiro. Open source, MIT license.</p>
   </footer>
 
   <script src="detector.js"></script>
