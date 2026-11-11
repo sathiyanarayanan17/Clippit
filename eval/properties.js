@@ -52,6 +52,15 @@ check("negated warnings are never flagged as a scam",
   fc.property(fc.constantFrom(...NEGATORS), fc.constantFrom(...RISKY), benignText, (n, r, b) =>
     D.analyze(`${b}\n${n} ${r} with anyone.`).level !== "scam"));
 
+// 4b. Same rule in Hinglish and Hindi, where the "not" comes AFTER the thing.
+const HI_WARNINGS = [
+  "Apna OTP kisi ko mat batana.", "OTP kisi ko nahi batana chahiye.", "Kabhi bhi apna PIN share mat karein.",
+  "आपका ओटीपी किसी को न बताएं।", "अपना पिन किसी को मत बताइए।", "सीवीवी कभी किसी को नहीं बताना चाहिए।",
+];
+check("Hinglish and Hindi warnings are never flagged as a scam",
+  fc.property(fc.constantFrom(...HI_WARNINGS), benignText, (w, b) =>
+    D.analyze(`${b}\n${w}`).level !== "scam" && D.analyze(`${w}\n${b}`).level !== "scam"));
+
 // 5. Case and spacing must not change the verdict.
 check("upper/lower case does not change the verdict",
   fc.property(scamText, fc.constantFrom("upper", "lower"), (s, mode) => {

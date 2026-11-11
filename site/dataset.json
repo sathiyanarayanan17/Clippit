@@ -16,7 +16,12 @@
       "GST notice: your registration will be cancelled and a penalty of Rs 25,000 applies. Pay now at http://gst-pay.top",
       "Your business loan of 10 lakh is pre-approved. Pay Rs 5,000 processing fee and insurance to release it.",
       "I sent Rs 15,000 to your number by mistake. Please send it back urgently.",
-      "Dear customer, your HDFC netbanking will be blocked today. Login at https://hdfcbank-secure-login.com to avoid suspension."
+      "Dear customer, your HDFC netbanking will be blocked today. Login at https://hdfcbank-secure-login.com to avoid suspension.",
+      "Aapka SBI account band ho jayega. Turant KYC update karein: http://sbi-kyc.top",
+      "Main CBI officer bol raha hoon. Aapko girftar kiya jayega. Kisi ko mat batana aur call mat kaatna.",
+      "Sir aapka KYC pending hai. Turant apna OTP bata do.",
+      "Aapne lottery jeeta hai! Inaam lene ke liye 5000 rupaye processing fee bhejiye.",
+      "आपका खाता बंद हो जाएगा। तुरंत केवाईसी अपडेट करें। किसी को न बताएं।"
     ],
     "normal": [
       "Rs 540.00 debited from A/c XX1122 on 08-Nov. Ref no 77123456.",
@@ -35,7 +40,14 @@
       "Scan the QR code at the counter to pay Rs 350 to the shop.",
       "Log in at https://www.hdfcbank.com to view your statement.",
       "Open https://retail.onlinesbi.sbi/ to see your passbook. Never share your password with anyone.",
-      "Track your order at https://www.amazon.in/orders anytime."
+      "Track your order at https://www.amazon.in/orders anytime.",
+      "Bhai kal shaam ko milte hain, abhi thoda busy hoon.",
+      "Mummy ko bol dena main ghar aa raha hoon, dinner mat banana.",
+      "Apna OTP kisi ko mat batana. Yeh sirf aapke liye hai.",
+      "Kal paise bhej dena, main shaam ko lunch kar lunga.",
+      "Bank ne aapka KYC update kar diya hai. Dhanyavad.",
+      "कल शाम को मिलते हैं, खाना बाहर खाएँगे।",
+      "आपका ओटीपी किसी को न बताएं। यह सिर्फ़ आपके लिए है।"
     ]
   },
   "holdout": {

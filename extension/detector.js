@@ -13,7 +13,9 @@
   // Words that, shortly before a match in the same sentence, mean the text is
   // WARNING about the thing rather than asking for it.
   const NEGATION =
-    /\b(do not|don't|dont|never|won't|will not|shall not|should not|must not|beware|avoid|not to|nobody|no one)\b/i;
+    /(?:\b(?:do not|don't|dont|never|won't|will not|shall not|should not|must not|beware|avoid|not to|nobody|no one|nahi|nahin|nhi|mat|kabhi nahi)\b)|नहीं|मत/i;
+  // Hindi puts the "not" AFTER the thing ("OTP kisi ko mat batao"), so also look just after a match.
+  const NEGATION_AFTER = /\b(mat|nahi|nahin|nhi)\b|\bna\s+(bata|batay|share|de)|नहीं|मत|कभी न|(?:^|\s)न\s/i;
 
   // negatable: true  -> ignored when preceded by a negation ("never share your OTP")
   // cat: used for the diversity bonus (many different kinds of signal = more suspicious)
@@ -144,6 +146,52 @@
       label: "'I sent money by mistake, send it back'",
       why: "The first payment is often fake or reversed later. Check your own balance before returning anything." },
 
+    // --- Hinglish (Hindi in English letters) and Hindi (Devanagari)
+    { id: "hi_arrest", cat: "authority", w: 4, negatable: true, hi: true,
+      re: /girf?taar|giraftar|girftar|गिरफ़?्?तार/i,
+      label: "Threat of arrest (Hindi)",
+      why: "Real police never arrest anyone over a call or video chat, and never ask for money to avoid it." },
+    { id: "hi_police", cat: "authority", w: 1.5, negatable: true, hi: true,
+      re: /पुलिस|सीबीआई|साइबर सेल|आरबीआई|crime branch|cyber cell/i,
+      label: "Claims to be police or an official body (Hindi)",
+      why: "Scammers pretend to be police, the CBI or the RBI to scare you." },
+    { id: "hi_otp", cat: "secrets", w: 3.5, negatable: true, hi: true,
+      re: /(otp|pin|cvv|password)[^.\n]{0,25}\b(bata|batao|batayiye|bataiye|bhej|bhejo|bhejiye|de do|dijiye|share)|\b(bata|batao|bhej|bhejo|de do)\b[^.\n]{0,20}(otp|pin|cvv)|(ओटीपी|ओ\.?टी\.?पी|सीवीवी)[^.\n]{0,25}(बता|भेज|दीजिए|दे दो)/i,
+      label: "Asks for your OTP, PIN or CVV (Hindi)",
+      why: "No bank or company will ever ask for your OTP, PIN or CVV." },
+    { id: "hi_kyc", cat: "secrets", w: 2.5, negatable: true, hi: true,
+      re: /kyc[^.\n]{0,40}(update|expire|pending|karwa|karo|karein|kijiye)|केवाईसी/i,
+      label: "Fake KYC update (Hindi)",
+      why: "Banks do not ask you to complete KYC through a message or link." },
+    { id: "hi_block", cat: "pressure", w: 2, negatable: true, hi: true,
+      re: /(account|card|sim|number|khata|खाता|कार्ड|सिम)[^.\n]{0,30}(\bband\b|\bbandh\b|block|suspend|बंद|ब्लॉक)/i,
+      label: "Says something will be blocked (Hindi)",
+      why: "Fear of losing access is used to make you click or pay." },
+    { id: "hi_urgent", cat: "pressure", w: 1.5, negatable: false,
+      re: /\bturant\b|\bforan\b|ghante (ke )?andar|तुरंत|फौरन|फ़ौरन|घंटे (के )?अंदर/i,
+      label: "Rushing you (Hindi)",
+      why: "Scammers hurry you so you do not have time to think or ask anyone." },
+    { id: "hi_secret", cat: "pressure", w: 3, negatable: false,
+      re: /kisi (ko|se) (bhi )?(mat |na )?(bata|batao|bolna|kehna)|gopniya|किसी (को|से) (भी )?(मत |न )?(बता|बोल|कह)|गोपनीय/i,
+      label: "Asks you to keep it secret (Hindi)",
+      why: "Asking for secrecy is a big warning sign. Scammers want to stop family from helping you." },
+    { id: "hi_stay_on_call", cat: "pressure", w: 2.5, negatable: false,
+      re: /call (mat )?(kaat|cut|disconnect)|phone mat (kaat|rakh)|line par bane rahiye|call par bane rahiye|कॉल (मत )?(काट|कट)|लाइन पर बने रहिए/i,
+      label: "Keeps you on the call (Hindi)",
+      why: "Scammers keep you on the line so nobody else can warn you." },
+    { id: "hi_pay_ask", cat: "money", w: 2, negatable: true, hi: true,
+      re: /(paise|paisa|rupaye|rupay|raashi|रुपये|पैसे)[^.\n]{0,25}(bhej|transfer|jama|भेज|जमा|ट्रांसफर)|(bhej|transfer|jama|भेज|जमा)[^.\n]{0,25}(₹|\brs\.?|rupaye|रुपये)\s*[\d,]+/i,
+      label: "Asks you to send money (Hindi)",
+      why: "Be careful when an unexpected message asks you to send money." },
+    { id: "hi_safe_account", cat: "money", w: 4, negatable: true, hi: true,
+      re: /(surakshit|safe|secure)\s*(khata|account)|सुरक्षित खाता/i,
+      label: "Asks you to move money to a 'safe account' (Hindi)",
+      why: "There is no such thing. Money sent to a 'safe account' goes to the scammer." },
+    { id: "hi_prize", cat: "money", w: 2.5, negatable: true, hi: true,
+      re: /inaam (jeeta|mila|jeet)|aapne (\w+ )?(jeeta|jita)|इनाम (जीता|मिला)|लॉटरी/i,
+      label: "Prize you never entered for (Hindi)",
+      why: "You cannot win a contest you did not enter." },
+
     // --- links
     { id: "short_link", cat: "link", w: 2, negatable: true,
       re: /\b(bit\.ly|tinyurl\.com|cutt\.ly|rb\.gy|t\.co|is\.gd|shorturl\.at)\//i,
@@ -173,18 +221,28 @@
       re: /\b(never|do not|don't) (share|disclose|ask)\b[^.\n]{0,40}(otp|pin|cvv|password)|will never ask/i },
     { id: "m_notyou", w: -1.5,
       re: /if (this was )?not you|if you did not|number (printed )?on (the back of )?your card/i },
+    { id: "m_hi_advisory", w: -2.5,
+      re: /(otp|pin|cvv|password)[^.\n]{0,40}\b(mat|na|nahi|nahin|kabhi)\b|(ओटीपी|पिन|सीवीवी)[^.\n]{0,40}(मत|नहीं|कभी|\sन\s)/i },
   ];
 
   const THRESHOLD_SCAM = 6;
   const THRESHOLD_SUSPICIOUS = 3.5;
 
-  function isNegated(text, index) {
+  function isNegated(text, index, end, hi) {
     // Look back at most 50 chars, but only inside the same sentence/line.
     const start = Math.max(0, index - 50);
     let before = text.slice(start, index);
     const cut = Math.max(before.lastIndexOf("\n"), before.lastIndexOf("!"), before.lastIndexOf("?"));
     if (cut >= 0) before = before.slice(cut + 1);
-    return NEGATION.test(before);
+    if (NEGATION.test(before)) return true;
+    if (hi && end != null) {
+      // Hindi word order: the "not" often comes right after ("OTP kisi ko mat batao")
+      let after = text.slice(end, end + 35);
+      const stop = after.search(/[.!?\n]/);
+      if (stop >= 0) after = after.slice(0, stop);
+      if (NEGATION_AFTER.test(after)) return true;
+    }
+    return false;
   }
 
   // ---- lookalike links: a famous name inside a web address that does not belong to it
@@ -239,7 +297,7 @@
     for (const s of SIGNALS) {
       const m = s.re.exec(text);
       if (!m) continue;
-      if (s.negatable && isNegated(text, m.index)) continue;
+      if (s.negatable && isNegated(text, m.index, m.index + m[0].length, s.hi)) continue;
       hits.push({ id: s.id, cat: s.cat, w: s.w, label: s.label, why: s.why, match: m[0] });
     }
     for (const m of MITIGATORS) {
@@ -252,25 +310,25 @@
   // ---- scam types: a plain name plus "what usually happens next"
   const TYPES = [
     { id: "digital_arrest", name: "Digital-arrest script",
-      signals: ["digital_arrest", "authority", "legal_threat", "id_misuse", "stay_on_call", "secrecy"],
+      signals: ["digital_arrest", "authority", "legal_threat", "id_misuse", "stay_on_call", "secrecy", "hi_arrest", "hi_police", "hi_secret", "hi_stay_on_call"],
       next: ["They keep you on a video call and say you cannot hang up.",
              "They say your money must be 'checked' by moving it to a safe account.",
              "They tell you to tell nobody, then ask for a transfer."],
       doNow: "Hang up. No police or court arrests anyone over a call. Tell a family member." },
     { id: "safe_account", name: "'Safe account' scam",
-      signals: ["safe_account", "payment_ask", "authority"],
+      signals: ["safe_account", "payment_ask", "authority", "hi_safe_account", "hi_pay_ask"],
       next: ["They create fear about your savings.",
              "They give you an 'RBI' or 'secure' account number.",
              "Your money is moved and cannot easily be brought back."],
       doNow: "Stop. No bank or RBI account is ever needed to 'protect' your money." },
     { id: "kyc", name: "Fake KYC / account-blocked link",
-      signals: ["kyc", "account_blocked", "short_link", "odd_domain", "ip_link", "click_verify", "lookalike_link"],
+      signals: ["kyc", "account_blocked", "short_link", "odd_domain", "ip_link", "click_verify", "lookalike_link", "hi_kyc", "hi_block"],
       next: ["The link opens a copy of your bank's website.",
              "It asks for your card number, OTP or login.",
              "The scammer uses them to empty your account."],
       doNow: "Do not click. Open your bank's app yourself, or call the number on your card." },
     { id: "otp", name: "OTP / PIN theft",
-      signals: ["otp"],
+      signals: ["otp", "hi_otp"],
       next: ["They say they need the code 'to verify' or 'to cancel' something.",
              "The code actually approves a payment or login for them."],
       doNow: "Never share an OTP, PIN or CVV with anyone, ever." },
@@ -293,7 +351,7 @@
              "They keep asking for more."],
       doNow: "Check the courier's official app or website yourself. Do not use the link." },
     { id: "prize", name: "Prize / lottery scam",
-      signals: ["prize", "fee"],
+      signals: ["prize", "fee", "hi_prize"],
       next: ["They ask for a 'processing fee' to release the prize.",
              "More fees follow. The prize never arrives."],
       doNow: "Ignore it. You cannot win a contest you did not enter." },
