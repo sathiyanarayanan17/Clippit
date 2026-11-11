@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Clippit</title>
+  <style>
+    body { font: 14px system-ui, Segoe UI, Arial, sans-serif; width: 260px; margin: 12px; }
+    h1 { font-size: 16px; margin: 0 0 8px; }
+    label { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+    p { color: #555; margin: 8px 0 0; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>&#x1F6E1;&#xFE0F; Clippit</h1>
+  <label><input type="checkbox" id="enabled"> Turn Clippit on</label>
+  <label><input type="checkbox" id="light"> Light mode (shorter, no wait)</label>
+  <label><input type="checkbox" id="muted"> Don't warn on <span id="host"></span></label>
+  <p>Everything runs on your device. Nothing is sent or stored.</p>
+  <script src="popup.js"></script>
+</body>
+</html>

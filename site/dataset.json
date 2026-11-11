@@ -1,0 +1,61 @@
+{
+  "note": "Hand-written examples, not real traffic. 'tune' may be used to adjust rules. 'holdout' must NEVER be used for tuning; only report its numbers.",
+  "tune": {
+    "scam": [
+      "This is Officer Sharma from the CBI. A case has been registered against you. You are under digital arrest. Do not tell anyone and stay on the video call.",
+      "Dear customer, your HDFC KYC is pending. Update immediately at http://hdfc-kyc.top or your account will be blocked.",
+      "Transfer Rs 50,000 to the RBI safe account right now to protect your savings. Do not inform bank staff.",
+      "Your courier parcel is held at customs. Pay a clearance fee of Rs 3,200 today. bit.ly/4abCd",
+      "Please install AnyDesk and tell me the code so I can process your refund.",
+      "You have won the lucky draw! Pay a Rs 2,000 processing fee to claim your prize.",
+      "Approve the collect request and enter your UPI PIN to receive Rs 1,500 cashback.",
+      "Guaranteed returns: double your money in 10 days. Send USDT to this crypto wallet."
+    ],
+    "normal": [
+      "Rs 540.00 debited from A/c XX1122 on 08-Nov. Ref no 77123456.",
+      "Your OTP is 391827. Do not share it with anyone.",
+      "Lunch at 1? I'll grab a table near the window.",
+      "Your order #5521 is out for delivery today.",
+      "Never share your OTP, PIN or CVV with anyone. Banks will never ask for them.",
+      "Thank you for your payment of Rs 999. Transaction ID TXN4412.",
+      "Can you send me the notes from yesterday's class?",
+      "Rs 25,000 credited to your account XX9981. Salary for November."
+    ]
+  },
+  "holdout": {
+    "scam": [
+      "This is Officer Verma from Mumbai Police cyber cell. A case has been registered against your Aadhaar for money laundering. You are under digital arrest. Stay on the video call and do not tell anyone.",
+      "Dear customer your SBI KYC is expiring today. Update immediately at http://sbi-kyc-update.xyz or your account will be blocked.",
+      "To protect your funds transfer Rs 85,000 to the RBI safe account we share. Do not inform the bank staff.",
+      "Your parcel is held at customs. Pay a clearance fee of Rs 4,500 within 2 hours or it will be seized. Link: bit.ly/3xYzAb",
+      "Please download AnyDesk and share the 9 digit code so our technician can fix your refund.",
+      "Congratulations! You have won a lucky draw prize of 25 lakh. Pay Rs 3,000 processing fee to claim.",
+      "Your electricity will be disconnected tonight at 9:30 pm. Call this officer immediately and pay the pending bill.",
+      "Hi mom, this is my new number. I had an accident and need money urgently, transfer Rs 20,000 please. Don't tell dad.",
+      "Earn Rs 5,000 per day working from home. Simple tasks, like YouTube videos and earn commission. Pay Rs 1,000 registration.",
+      "Guaranteed returns of 5% daily profit on crypto. Send USDT to this wallet to start.",
+      "Approve the collect request on your UPI app and enter your UPI PIN to receive your cashback of Rs 2,000.",
+      "Your SIM will be blocked in 2 hours as it was used in illegal activity. Press 1 to talk to the TRAI officer.",
+      "Buy Google Play gift cards worth Rs 10,000 and read out the codes to me. This is a confidential government matter.",
+      "Your account has been suspended. Verify now and enter your OTP and CVV at http://192.168.4.7/login",
+      "Final warning: a narcotics parcel was found in your name. Cooperate with the CBI officer or an arrest warrant will be issued."
+    ],
+    "normal": [
+      "Rs 1,250.00 debited from A/c XX4521 on 10-Nov via UPI. Ref no 431256789. If not you, call the number on the back of your card.",
+      "Your OTP for login is 482913. Do not share it with anyone. Valid for 5 minutes.",
+      "Reminder: Never share your OTP, PIN or CVV with anyone, including bank staff. Beware of fraudulent calls.",
+      "Hey are we still on for dinner tomorrow at 8? I'll book the table.",
+      "Your order #84521 has been shipped and will arrive on Friday. Track it in the app.",
+      "Thank you for your payment of Rs 2,499. Your transaction ID is TXN99812. Receipt attached.",
+      "Mom, I reached the hostel. Will call you in the evening after class.",
+      "Your electricity bill of Rs 1,120 is generated. Due date 20 Nov. Pay via the official app at your convenience.",
+      "Meeting moved to 3 pm. Please send the updated slides before then.",
+      "Rs 15,000 credited to your account XX1290 on 09-Nov. Salary for October. Available balance Rs 48,300.",
+      "RBI advisory: Banks will never ask you to install remote access apps like AnyDesk. Report suspicious calls to 1930.",
+      "Congratulations on your promotion! Dinner is on me this weekend.",
+      "Your flight 6E-204 is on time. Boarding begins at 6:10 am at gate 14.",
+      "Please complete your annual health check-up at your convenience. No action is needed if already done.",
+      "Your credit card statement for October is ready. Minimum due Rs 1,800 by 22 Nov. Pay using the bank's official app."
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clippit: is this message a scam?</title>
+  <meta name="description" content="Clippit checks a suspicious message on your device. Nothing is sent anywhere.">
+  <meta name="theme-color" content="#b3261e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#check">Skip to the checker</a>
+
+  <header>
+    <h1><span aria-hidden="true">&#x1F6E1;&#xFE0F;</span> Clippit</h1>
+    <p class="tag">The assistant we hated is the one we needed.</p>
+    <nav aria-label="Sections">
+      <a href="#check">Check a message</a>
+      <a href="#practice">Practice</a>
+      <a href="#get">Get Clippit</a>
+      <a href="#about">How it works</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="check" aria-labelledby="check-h">
+      <h2 id="check-h">Is this message a scam?</h2>
+      <p>Paste the message below. The check runs in this page, on your device. Nothing is sent or saved.</p>
+      <label for="msg">Message</label>
+      <textarea id="msg" rows="6" placeholder="Paste an SMS, WhatsApp message or email text here"></textarea>
+      <div class="row">
+        <button id="checkBtn" class="primary">Check message</button>
+        <button id="clearBtn" type="button">Clear</button>
+        <button id="sampleBtn" type="button">Try an example</button>
+      </div>
+      <div id="result" aria-live="polite"></div>
+    </section>
+
+    <section id="practice" aria-labelledby="practice-h">
+      <h2 id="practice-h">Practice: spot the scam</h2>
+      <p>Ten messages. Decide if each one is a scam. Clippit then shows why.</p>
+      <div id="game"></div>
+    </section>
+
+    <section id="get" aria-labelledby="get-h">
+      <h2 id="get-h">Get Clippit</h2>
+      <div class="cols">
+        <div class="box">
+          <h3>On a computer: the browser extension</h3>
+          <p>It stays quiet until a page looks like a scam. Then it pauses the Pay button before money moves.</p>
+          <ol>
+            <li>Download the <code>extension</code> folder from the project.</li>
+            <li>Open <code>chrome://extensions</code> and turn on Developer mode.</li>
+            <li>Click "Load unpacked" and choose the folder.</li>
+          </ol>
+        </div>
+        <div class="box">
+          <h3>On a phone: add this page to your home screen</h3>
+          <p>On Android, open this page in Chrome and choose "Install app". Then, on any suspicious SMS or WhatsApp message, tap Share and pick Clippit. It checks the message at once.</p>
+          <p class="note">The phone version only checks messages you share. It cannot read your messages or stop a payment. The extension is the only part that pauses a payment. Sharing to an installed web app works best on Android; support on iPhone is limited.</p>
+          <button id="installBtn" hidden>Install on this device</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-h">
+      <h2 id="about-h">How it works</h2>
+      <ul>
+        <li>About 30 signals, such as fake authority, urgency, secrecy, OTP requests and odd links.</li>
+        <li>It understands warnings. "Never share your OTP" from a real bank is not flagged.</li>
+        <li>Everything runs on your device. No account, no server, no tracking.</li>
+      </ul>
+      <h3>Honest limits</h3>
+      <ul>
+        <li>It cannot hear phone calls.</li>
+        <li>New wording can fool the rules.</li>
+        <li>It was tested on a small set of hand-written messages, not real traffic.</li>
+        <li>"No signals found" does not prove a message is safe. If in doubt, call your bank on the number printed on your card.</li>
+      </ul>
+      <p><strong>If money was lost, call 1930</strong> (India's national cybercrime helpline) right away.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for Kiroween. Clippit brings back the interrupting assistant, and aims it at the one moment interruption helps.</p>
+  </footer>
+
+  <script src="detector.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

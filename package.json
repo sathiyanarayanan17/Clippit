@@ -1,0 +1,13 @@
+{
+  "name": "clippit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Clippit: the assistant we hated is the one we needed. On-device scam guard.",
+  "scripts": {
+    "sync": "node scripts/sync-site.js",
+    "icons": "node scripts/make-icons.js",
+    "serve": "npx --yes serve@14.2.4 site",
+    "test": "node eval/run.js && node eval/types.js && node scripts/sync-site.js --check",
+    "eval": "node eval/run.js --verbose"
+  }
+}
