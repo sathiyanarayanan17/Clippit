@@ -54,3 +54,35 @@ for (const s of [192, 512]) {
   fs.writeFileSync(path.join(out, `icon-${s}.png`), png(s));
   console.log(`wrote site/icon-${s}.png`);
 }
+
+// Android adaptive-icon foreground: transparent background, white disc with a red "!"
+function pngRGBA(size) {
+  const raw = Buffer.alloc((size * 4 + 1) * size);
+  const c = size / 2;
+  for (let y = 0; y < size; y++) {
+    raw[y * (size * 4 + 1)] = 0;
+    for (let x = 0; x < size; x++) {
+      const dx = x - c, dy = y - c;
+      let col = [0, 0, 0, 0];
+      if (Math.hypot(dx, dy) < size * 0.27) {
+        col = [255, 255, 255, 255];
+        const bar = Math.abs(dx) < size * 0.035 && y > size * 0.34 && y < size * 0.56;
+        const dot = Math.hypot(dx, y - size * 0.65) < size * 0.045;
+        if (bar || dot) col = [179, 38, 30, 255];
+      }
+      const i = y * (size * 4 + 1) + 1 + x * 4;
+      raw[i] = col[0]; raw[i + 1] = col[1]; raw[i + 2] = col[2]; raw[i + 3] = col[3];
+    }
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(size, 0); ihdr.writeUInt32BE(size, 4);
+  ihdr[8] = 8; ihdr[9] = 6; // 8-bit RGBA
+  return Buffer.concat([
+    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    chunk("IHDR", ihdr), chunk("IDAT", zlib.deflateSync(raw)), chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+const drawable = path.join(__dirname, "..", "mobile", "android", "res", "drawable-xxxhdpi");
+fs.mkdirSync(drawable, { recursive: true });
+fs.writeFileSync(path.join(drawable, "ic_foreground.png"), pngRGBA(432));
+console.log("wrote mobile/android/res/drawable-xxxhdpi/ic_foreground.png");

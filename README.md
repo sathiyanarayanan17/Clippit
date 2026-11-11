@@ -11,10 +11,18 @@ Built for Kiroween (Resurrection: Clippy).
 | Surface | Folder | What it does |
 |---|---|---|
 | Browser extension (Chrome, Manifest V3) | `extension/` | Scans page text locally and pauses the payment button when the page shows scam signals. |
-| Web app | `site/` | Paste-a-message checker, practice mode, install guide. |
-| Phone (PWA) | `site/` | Installable on Android. Share a suspicious SMS or WhatsApp message to Clippit to check it. |
+| Web app | `site/` | Paste-a-message checker, practice mode, install guide. Also installable as a web app. |
+| Android app | `mobile/` | A small native shell around the same web app. Share any message to Clippit, or select text and choose "Clippit". Reads warnings aloud with the phone's own voices. The app has no internet permission. |
 
 All three use the same `detector.js`. Everything runs on the device: no server, no accounts, no network calls, no message text stored.
+
+### Build the Android app
+Needs JDK 17+ and the Android SDK (platform 34, build-tools 34.0.0). No Gradle and no downloads:
+```
+node mobile/build.js            # builds mobile/build/clippit.apk
+node mobile/build.js --install  # also installs it on the connected phone or emulator
+```
+The APK is signed with a throwaway debug key that is created on first build and never committed.
 
 ## Features
 - Weighted rule-based detector (about 30 signals) that understands negation ("never share your OTP" is not flagged) and discounts genuine receipts and advisories.

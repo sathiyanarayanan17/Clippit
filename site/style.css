@@ -48,3 +48,5 @@ body.big h2 { font-size: 32px; }
 body.big button, body.big a.btn { font-size: 24px; padding: 16px 22px; border-width: 3px; }
 body.big .tip { background: #fff0cc; border: 2px solid #8a5a00; }
 body.big small, body.big .note { color: #222; }
+body.native #get { display: none; }
+body.native nav a[href="#get"] { display: none; }

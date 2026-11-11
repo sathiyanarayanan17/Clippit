@@ -98,6 +98,12 @@
   });
 
   function speak(text) {
+    // Inside the Android app, use the phone's own speech engine (works for Hindi, Tamil, ...)
+    if (window.ClippitNative && ClippitNative.speak) {
+      const r = ClippitNative.speak(text, I18N.LANGS[lang].speech);
+      if (r === "nolang") alert(T("no_voice"));
+      return;
+    }
     if (!("speechSynthesis" in window)) { alert(T("no_speech")); return; }
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -181,7 +187,7 @@
   if (shared) {
     $("msg").value = shared;
     renderResult($("result"), shared);
-    $("check").scrollIntoView();
+    $("result").scrollIntoView();
   }
 
   // ---------- practice mode ----------
@@ -249,6 +255,10 @@
   initPractice();
 
   // ---------- install (PWA) ----------
+  if (window.ClippitNative) {
+    // Already the installed Android app: the "get the phone version" box is not needed.
+    document.body.classList.add("native");
+  }
   let deferred = null;
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
@@ -263,7 +273,7 @@
     $("installBtn").hidden = true;
   });
 
-  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http") && !window.ClippitNative) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
 })();

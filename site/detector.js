@@ -289,6 +289,16 @@
     return null;
   }
 
+  // A pattern can stop in the middle of a word ("KYC is expir"). Show whole words instead.
+  const WORDCH = /[\p{L}\p{N}\p{M}]/u;
+  function wholeWords(text, index, matched) {
+    let s = index;
+    let e = index + matched.length;
+    while (s > 0 && WORDCH.test(text[s - 1]) && WORDCH.test(text[s])) s--;
+    while (e < text.length && WORDCH.test(text[e]) && WORDCH.test(text[e - 1])) e++;
+    return text.slice(s, e);
+  }
+
   function scan(text) {
     const hits = [];
     if (!text) return hits;
@@ -298,7 +308,7 @@
       const m = s.re.exec(text);
       if (!m) continue;
       if (s.negatable && isNegated(text, m.index, m.index + m[0].length, s.hi)) continue;
-      hits.push({ id: s.id, cat: s.cat, w: s.w, label: s.label, why: s.why, match: m[0] });
+      hits.push({ id: s.id, cat: s.cat, w: s.w, label: s.label, why: s.why, match: wholeWords(text, m.index, m[0]) });
     }
     for (const m of MITIGATORS) {
       const r = m.re.exec(text);

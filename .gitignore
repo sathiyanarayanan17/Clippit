@@ -1,4 +1,8 @@
 node_modules/
+e2e/shots/
+mobile/build/
+mobile/debug.keystore
+mobile/shots/
 .DS_Store
 Thumbs.db
 *.log
