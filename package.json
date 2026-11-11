@@ -7,7 +7,7 @@
     "sync": "node scripts/sync-site.js",
     "icons": "node scripts/make-icons.js",
     "serve": "npx --yes serve@14.2.4 site",
-    "test": "node eval/run.js && node eval/types.js && node eval/properties.js && node scripts/sync-site.js --check",
+    "test": "node eval/run.js && node eval/types.js && node eval/i18n.js && node eval/properties.js && node scripts/sync-site.js --check",
     "eval": "node eval/run.js --verbose"
   },
   "devDependencies": {

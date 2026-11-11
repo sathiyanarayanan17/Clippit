@@ -40,3 +40,11 @@ small, .note { color: #555; display: block; }
 code { background: #eee; padding: 1px 5px; border-radius: 4px; }
 footer { text-align: center; color: #555; padding: 16px; border-top: 1px solid var(--line); }
 @media (prefers-reduced-motion: no-preference) { .result { transition: border-color .2s; } }
+.bigtoggle { display: inline-flex; gap: 8px; align-items: center; color: #fff; font-weight: 600; margin: 0 8px 8px; }
+.bigtoggle select { font: inherit; padding: 4px; }
+/* Grandpa Mode: bigger text, bigger buttons, stronger contrast */
+body.big { font-size: 24px; }
+body.big h2 { font-size: 32px; }
+body.big button, body.big a.btn { font-size: 24px; padding: 16px 22px; border-width: 3px; }
+body.big .tip { background: #fff0cc; border: 2px solid #8a5a00; }
+body.big small, body.big .note { color: #222; }

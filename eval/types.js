@@ -24,4 +24,14 @@ for (const [text, expected] of cases) {
 }
 // Safe text must have no type.
 assert.strictEqual(D.analyze("Lunch at 1? I'll grab a table.").scamType, null);
+
+// Lookalike links: fake names are flagged, real domains are not.
+const ids = (t) => D.scan(t).map((h) => h.id);
+for (const bad of ["http://sbi-kyc-update.xyz", "https://hdfcbank-secure-login.com", "https://paytm.verify-now.in", "http://www.irctc-refund.net"]) {
+  assert.ok(ids("Open " + bad).includes("lookalike_link"), "should flag " + bad);
+}
+for (const good of ["https://www.onlinesbi.sbi/", "https://retail.onlinesbi.sbi/login", "https://www.hdfcbank.com", "https://www.amazon.in/orders", "https://example.com/casbin", "https://www.rbi.org.in"]) {
+  assert.ok(!ids("Open " + good).includes("lookalike_link"), "should NOT flag " + good);
+}
+assert.ok(!ids("Beware of fake sites like http://sbi-kyc-update.xyz").includes("lookalike_link"));
 console.log(`types    ${ok}/${cases.length} labelled correctly, safe text has no label`);

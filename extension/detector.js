@@ -158,7 +158,7 @@
       label: "Link to a raw number address",
       why: "Genuine websites do not use a number address." },
     { id: "click_verify", cat: "link", w: 1.5, negatable: true,
-      re: /(click|tap|open)[^.\n]{0,15}(here|link|below)|verify now|login now/i,
+      re: /(click|tap|open)[^.\n]{0,15}(here|link|below)|verify now|login now|log ?in at|sign in at/i,
       label: "Pushes you to click",
       why: "Do not open links from unexpected messages." },
   ];
@@ -187,9 +187,55 @@
     return NEGATION.test(before);
   }
 
+  // ---- lookalike links: a famous name inside a web address that does not belong to it
+  // brand token -> the real domains for that brand
+  const BRANDS = {
+    sbi: ["sbi.co.in", "onlinesbi.sbi", "onlinesbi.com", "sbicard.com", "sbi.bank.in"],
+    hdfc: ["hdfcbank.com", "hdfc.com", "hdfclife.com", "hdfcergo.com"],
+    icici: ["icicibank.com", "icicidirect.com", "iciciprulife.com", "icicilombard.com"],
+    axisbank: ["axisbank.com"],
+    paytm: ["paytm.com", "paytmbank.com"],
+    phonepe: ["phonepe.com"],
+    rbi: ["rbi.org.in"],
+    npci: ["npci.org.in"],
+    irctc: ["irctc.co.in"],
+    uidai: ["uidai.gov.in"],
+    incometax: ["incometax.gov.in", "incometaxindia.gov.in"],
+    amazon: ["amazon.in", "amazon.com"],
+    flipkart: ["flipkart.com"],
+  };
+
+  function belongsTo(host, domains) {
+    return domains.some((d) => host === d || host.endsWith("." + d));
+  }
+
+  function lookalikeLink(text) {
+    const re = /\b(?:https?:\/\/|www\.)([a-z0-9][a-z0-9.-]{2,80})/gi;
+    let m;
+    while ((m = re.exec(text))) {
+      const host = m[1].toLowerCase().replace(/\.+$/, "");
+      const parts = host.split(/[.-]/);
+      for (const [token, real] of Object.entries(BRANDS)) {
+        const named = parts.some((p) => (token.length <= 4 ? p === token || p.startsWith(token) : p.includes(token)));
+        if (named && !belongsTo(host, real)) {
+          if (isNegated(text, m.index)) continue;
+          return {
+            id: "lookalike_link", cat: "link", w: 5,
+            label: "Link imitates a well-known name",
+            why: "The address '" + host + "' uses the name '" + token + "' but is not their real website. Type the real address yourself.",
+            match: m[0],
+          };
+        }
+      }
+    }
+    return null;
+  }
+
   function scan(text) {
     const hits = [];
     if (!text) return hits;
+    const lk = lookalikeLink(text);
+    if (lk) hits.push(lk);
     for (const s of SIGNALS) {
       const m = s.re.exec(text);
       if (!m) continue;
@@ -218,7 +264,7 @@
              "Your money is moved and cannot easily be brought back."],
       doNow: "Stop. No bank or RBI account is ever needed to 'protect' your money." },
     { id: "kyc", name: "Fake KYC / account-blocked link",
-      signals: ["kyc", "account_blocked", "short_link", "odd_domain", "ip_link", "click_verify"],
+      signals: ["kyc", "account_blocked", "short_link", "odd_domain", "ip_link", "click_verify", "lookalike_link"],
       next: ["The link opens a copy of your bank's website.",
              "It asks for your card number, OTP or login.",
              "The scammer uses them to empty your account."],
@@ -343,5 +389,5 @@
     return score(scan(text));
   }
 
-  return { scan, score, analyze, SIGNALS, THRESHOLD_SCAM, THRESHOLD_SUSPICIOUS };
+  return { scan, score, analyze, SIGNALS, TYPES, THRESHOLD_SCAM, THRESHOLD_SUSPICIOUS };
 });

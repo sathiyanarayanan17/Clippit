@@ -23,9 +23,9 @@ Each task has a "Done when" test. Run `npm test` after any detector change.
   - Done when: the card shows the 1930 helpline, "Copy evidence and open cybercrime portal" copies a summary containing phrases, URL and time (not the full page text) and opens cybercrime.gov.in, and a Chakshu link opens.
 
 ## Next, small
-- [ ] 9. Lookalike link check for fake-bank-style names (e.g. `sbi-kyc-update`). Done when: a bank name inside a hyphenated domain not owned by that bank scores as a link signal, and a tune-set test covers it.
-- [ ] 10. Simple mode (bigger text, fewer buttons, high contrast). Done when: toggling it makes body text at least 18px and shows only Cancel and Ask family.
-- [ ] 11. Read aloud (test Tamil and Hindi voices first). Done when: a button speaks the warning in the browser's installed voice, and a fallback message shows if no voice exists.
+- [x] 9. Lookalike link check for fake-bank-style names (e.g. `sbi-kyc-update`). Done when: a bank name inside a domain not owned by that bank scores as a link signal, official domains and warnings that mention a fake site are not flagged (`node eval/types.js`).
+- [x] 10. Grandpa Mode (bigger text, fewer buttons, high contrast). Done when: the extension card shows one reason, one "do this now" line, and Cancel / Ask family / Read aloud as the big buttons, with "Continue anyway" small and last. The web app has a "Big text" switch.
+- [~] 11. Read aloud. English is done in the extension and web app using voices already on the device. Still to do: Tamil / Hindi text (needs real translations) and a test of installed voices. Done when: the warning is spoken in the user's language, with a visible message if no voice exists.
 - [ ] 12. Practice mode. Done when: 10 sample messages can be sorted scam/not and a score shows.
 
 ## Roadmap only (not built)

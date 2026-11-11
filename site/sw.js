@@ -1,7 +1,7 @@
 // Offline cache so Clippit still works with no connection.
-const CACHE = "clippit-v1";
+const CACHE = "clippit-v3";
 const FILES = [
-  "./", "./index.html", "./style.css", "./app.js", "./detector.js",
+  "./", "./index.html", "./style.css", "./app.js", "./detector.js", "./i18n.js",
   "./dataset.json", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png",
 ];
 

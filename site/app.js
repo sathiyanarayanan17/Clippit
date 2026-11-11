@@ -59,42 +59,86 @@
   function reportBox(text, res) {
     const status = el("small", { text: "" });
     return el("div", { class: "report" }, [
-      el("strong", { text: "Report it" }),
-      el("p", { text: "If money was lost, call " + HELPLINE + " (national cybercrime helpline) as soon as possible." }),
+      el("strong", { text: T("report_title") }),
+      el("p", { text: T("report_text") }),
       el("div", { class: "row" }, [
-        el("a", { class: "btn", href: "tel:" + HELPLINE, text: "Call " + HELPLINE }),
-        el("button", { text: "Copy evidence and open cybercrime portal", onclick: async () => {
-          try { await navigator.clipboard.writeText(evidenceText(text, res)); status.textContent = "Evidence copied. Paste it into the complaint."; }
-          catch (_) { status.textContent = "Could not copy automatically. Select the message and copy it."; }
+        el("a", { class: "btn", href: "tel:" + HELPLINE, text: "\u260E " + HELPLINE }),
+        el("button", { text: T("copy_open"), onclick: async () => {
+          try { await navigator.clipboard.writeText(evidenceText(text, res)); status.textContent = T("copied"); }
+          catch (_) { status.textContent = T("copy_failed"); }
           window.open(PORTAL, "_blank", "noopener");
         } }),
-        el("a", { class: "btn", href: CHAKSHU, target: "_blank", rel: "noopener", text: "Report a fraud call or SMS (Chakshu)" }),
+        el("a", { class: "btn", href: CHAKSHU, target: "_blank", rel: "noopener", text: T("chakshu") }),
       ]),
       status,
     ]);
   }
 
+  // ---------- language ----------
+  const I18N = window.ClippitI18n;
+  let lang = "en";
+  try { lang = localStorage.getItem("clippit-lang") || "en"; } catch (_) {}
+  if (!I18N.LANGS[lang]) lang = "en";
+  const T = (key, vars) => I18N.ui(lang, key, vars);
+  let lastText = "";
+  $("lang").value = lang;
+  $("lang").addEventListener("change", () => {
+    lang = $("lang").value;
+    try { localStorage.setItem("clippit-lang", lang); } catch (_) {}
+    if (lastText) renderResult($("result"), lastText); // show the current result in the new language
+  });
+
+  // ---------- Grandpa Mode + read aloud (voices already on the device, nothing is sent) ----------
+  const bigBox = $("bigMode");
+  try { bigBox.checked = localStorage.getItem("clippit-big") === "1"; } catch (_) {}
+  document.body.classList.toggle("big", bigBox.checked);
+  bigBox.addEventListener("change", () => {
+    document.body.classList.toggle("big", bigBox.checked);
+    try { localStorage.setItem("clippit-big", bigBox.checked ? "1" : "0"); } catch (_) {}
+  });
+
+  function speak(text) {
+    if (!("speechSynthesis" in window)) { alert(T("no_speech")); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = I18N.LANGS[lang].speech;
+    u.rate = 0.9;
+    const v = speechSynthesis.getVoices().find((x) => x.lang && x.lang.toLowerCase().startsWith(lang));
+    if (v) u.voice = v;
+    else if (lang !== "en") alert(T("no_voice")); // be honest when the device has no voice for this language
+    speechSynthesis.speak(u);
+  }
+
+  function spokenVerdict(res) {
+    if (res.level === "safe") return T("verdict_safe") + " " + T("safe_note");
+    return I18N.spoken(lang, res.scamType);
+  }
+
   // ---------- results ----------
   function renderResult(container, text) {
     container.textContent = "";
+    lastText = text;
     if (!text.trim()) { container.appendChild(el("p", { text: "Please paste a message first." })); return; }
     const res = D.analyze(text);
+    const info = I18N.typeInfo(lang, res.scamType);
     const box = el("div", { class: "result " + res.level });
+    box.appendChild(el("button", { text: "\u{1F50A} " + T("read_aloud"), onclick: () => speak(spokenVerdict(res)) }));
 
     if (res.level === "scam") {
-      box.appendChild(el("p", { class: "verdict bad-text", text: "This looks like a scam." }));
+      box.appendChild(el("p", { class: "verdict bad-text", text: T("banner_title") }));
     } else if (res.level === "suspicious") {
-      box.appendChild(el("p", { class: "verdict", text: "Be careful. Some things look suspicious." }));
+      box.appendChild(el("p", { class: "verdict", text: T("verdict_susp") }));
     } else {
-      box.appendChild(el("p", { class: "verdict good-text", text: "No scam signals found." }));
-      box.appendChild(el("p", { text: "That does not prove it is safe. If it asks for money, a code or a link click, check with your bank using the number on your card." }));
+      box.appendChild(el("p", { class: "verdict good-text", text: T("verdict_safe") }));
+      box.appendChild(el("p", { text: T("safe_note") }));
     }
 
     if (res.level !== "safe") {
-      if (res.scamType) box.appendChild(el("span", { class: "badge", text: res.scamType.name }));
-      box.appendChild(el("h3", { text: "Why Clippit is worried" }));
+      if (info) box.appendChild(el("span", { class: "badge", text: info.name }));
+      box.appendChild(el("h3", { text: T("why_worried") }));
       const ul = el("ul");
       for (const r of res.reasons.slice(0, 5)) {
+        // phrase + short reason; the explanation stays in English for now
         ul.appendChild(el("li", {}, [
           el("q", { text: r.match.length > 70 ? r.match.slice(0, 67) + "..." : r.match }),
           document.createTextNode(" " + r.label),
@@ -103,15 +147,15 @@
       }
       box.appendChild(ul);
 
-      box.appendChild(el("h3", { text: "Your message, with the warning phrases marked" }));
+      box.appendChild(el("h3", { text: T("marked_msg") }));
       box.appendChild(el("div", { class: "quoted" }, xrayNodes(text, res.reasons.map((r) => r.match))));
 
       if (res.scamType) {
-        box.appendChild(el("h3", { text: "What usually happens next" }));
+        box.appendChild(el("h3", { text: T("next_label") }));
         const ol = el("ol");
         for (const s of res.scamType.next) ol.appendChild(el("li", { text: s }));
         box.appendChild(ol);
-        box.appendChild(el("div", { class: "tip", text: "Do this now: " + res.scamType.doNow }));
+        box.appendChild(el("div", { class: "tip", text: T("do_now") + " " + info.doNow }));
       }
       box.appendChild(reportBox(text, res));
     }

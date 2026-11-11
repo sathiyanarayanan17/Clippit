@@ -8,7 +8,8 @@
  */
 (() => {
   const D = self.ClippitDetector;
-  if (!D || window.top !== window) return; // top frame only
+  const I18N = self.ClippitI18n;
+  if (!D || !I18N || window.top !== window) return; // top frame only
 
   const HOST_ID = "clippit-host";
   const PAY_RE = /\b(pay|pay now|send money|send|transfer|make payment|proceed to pay|confirm payment|submit payment|approve)\b/i;
@@ -23,7 +24,8 @@
   const PORTAL = "https://cybercrime.gov.in";
   const CHAKSHU = "https://sancharsaathi.gov.in/sfc/";
 
-  const settings = { enabled: true, light: false, mutedSites: [], familyNumber: "" };
+  const settings = { enabled: true, light: false, simple: false, lang: "en", mutedSites: [], familyNumber: "" };
+  const T = (key, vars) => I18N.ui(settings.lang, key, vars);
   const hits = new Map(); // id -> hit, accumulated across the page
   const seen = new Set(); // lines already scanned
   const allowed = new WeakSet(); // buttons the user chose to continue on
@@ -140,6 +142,13 @@
     button:disabled { opacity: .55; cursor: not-allowed; }
     .tip { background: #fff4e5; border-radius: 8px; padding: 8px; margin-top: 8px; }
     .report { background: #eef3fd; border-radius: 8px; padding: 8px; margin-top: 8px; }
+    /* Grandpa Mode: bigger text, bigger buttons, high contrast, fewer things on screen */
+    .simple .card { font-size: 21px; width: min(500px, 94vw); border-width: 4px; }
+    .simple h2 { font-size: 26px; }
+    .simple button, .simple a.btn { font-size: 21px; padding: 14px 20px; border-width: 2px; }
+    .simple .tip { background: #fff0cc; border: 2px solid #8a5a00; }
+    .simple small { color: #222; }
+    .linkish { background: none; border: none; text-decoration: underline; color: #333; padding: 6px 2px; font-size: 16px; }
   `;
 
   function mount(contentNode, modal) {
@@ -150,7 +159,7 @@
     const style = document.createElement("style");
     style.textContent = CSS_TEXT;
     const wrap = document.createElement("div");
-    if (modal) wrap.className = "modal";
+    wrap.className = (modal ? "modal " : "") + (settings.simple ? "simple" : "");
     wrap.appendChild(contentNode);
     root.append(style, wrap);
     document.documentElement.appendChild(host);
@@ -188,7 +197,7 @@
 
   function typeBadge() {
     const t = current.scamType;
-    return t ? el("div", { class: "type", text: t.name }) : el("span");
+    return t ? el("div", { class: "type", text: I18N.typeInfo(settings.lang, t).name }) : el("span");
   }
 
   // "What usually happens next" + what to do now
@@ -196,11 +205,11 @@
     const t = current.scamType;
     if (!t) return el("span");
     const ol = el("ol");
-    for (const s of t.next) ol.appendChild(el("li", { text: s }));
+    for (const s of t.next) ol.appendChild(el("li", { text: s })); // steps stay in English for now
     const d = el("details", {}, [
-      el("summary", { text: "What usually happens next" }),
+      el("summary", { text: T("next_label") }),
       ol,
-      el("div", { class: "tip", text: "Do this now: " + t.doNow }),
+      el("div", { class: "tip", text: T("do_now") + " " + I18N.typeInfo(settings.lang, t).doNow }),
     ]);
     if (!settings.light) d.open = true;
     return d;
@@ -222,29 +231,53 @@
 
   function reportBox() {
     const status = el("small", { text: "" });
-    const copyOpen = el("button", { text: "Copy evidence and open cybercrime portal", onclick: async () => {
+    const copyOpen = el("button", { text: T("copy_open"), onclick: async () => {
       try {
         await navigator.clipboard.writeText(evidenceText());
-        status.textContent = "Evidence copied. Paste it into the complaint.";
+        status.textContent = T("copied");
       } catch (_) {
-        status.textContent = "Could not copy automatically.";
+        status.textContent = T("copy_failed");
       }
       window.open(PORTAL, "_blank", "noopener");
     } });
     return el("div", { class: "report" }, [
-      el("strong", { text: "Report it" }),
-      el("div", { text: "If money was lost, call " + HELPLINE + " (national cybercrime helpline) as soon as possible." }),
+      el("strong", { text: T("report_title") }),
+      el("div", { text: T("report_text") }),
       el("div", { class: "row" }, [
         copyOpen,
-        el("a", { class: "btn", href: CHAKSHU, target: "_blank", rel: "noopener", text: "Report a fraud call or SMS (Chakshu)" }),
+        el("a", { class: "btn", href: CHAKSHU, target: "_blank", rel: "noopener", text: T("chakshu") }),
       ]),
       status,
     ]);
   }
 
+  // ---------- read aloud (uses the voices already on the device; nothing is sent anywhere) ----------
+  function speak() {
+    const lang = settings.lang;
+    if (!("speechSynthesis" in window)) { alert(T("no_speech")); return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(I18N.spoken(lang, current.scamType));
+    const code = I18N.LANGS[lang].speech;
+    u.lang = code;
+    u.rate = 0.9;
+    const voice = speechSynthesis.getVoices().find((v) => v.lang && v.lang.toLowerCase().startsWith(lang));
+    if (voice) u.voice = voice;
+    else if (lang !== "en") alert(T("no_voice")); // be honest when the device has no voice for this language
+    speechSynthesis.speak(u);
+  }
+
+  function readAloudButton() {
+    return el("button", { text: "\u{1F50A} " + T("read_aloud"), onclick: () => speak() });
+  }
+
+  function doNowTip() {
+    const t = current.scamType;
+    return el("div", { class: "tip", text: t ? T("do_now") + " " + I18N.typeInfo(settings.lang, t).doNow : T("generic_do_now") });
+  }
+
   function whatsappUrl() {
     const why = current.reasons.slice(0, 3).map((r) => "- " + r.label).join("\n");
-    const msg = "Hold on, I might be getting scammed. Please call me.\nPage: " + location.hostname + "\nWhy Clippit is worried:\n" + why;
+    const msg = T("family_msg") + "\nPage: " + location.hostname + "\nWhy Clippit is worried:\n" + why;
     const digits = String(settings.familyNumber || "").replace(/\D/g, "");
     return "https://wa.me/" + digits + "?text=" + encodeURIComponent(msg);
   }
@@ -272,20 +305,25 @@
   // ---------- passive warning ----------
   function showBanner() {
     bannerShown = true;
-    const card = el("div", { class: "card", role: "alert" }, [
-      el("h2", {}, [el("span", { class: "shield", text: "\u{1F6E1}\uFE0F" }), document.createTextNode("This looks like a scam")]),
+    const s = settings.simple;
+    const children = [
+      el("h2", {}, [el("span", { class: "shield", text: "\u{1F6E1}\uFE0F" }), document.createTextNode(T("banner_title"))]),
       typeBadge(),
-      reasonList(settings.light ? 2 : 3),
-      playbook(),
-      el("div", { class: "tip", text: "Never share an OTP. If unsure, call your bank on the number printed on your card." }),
-      reportBox(),
-      el("div", { class: "row" }, [
-        el("button", { text: "Dismiss", onclick: () => { recordDismissal(); unmount(); } }),
-        el("button", { text: "Ask family", onclick: () => window.open(whatsappUrl(), "_blank", "noopener") }),
-        el("button", { text: "Not a scam", onclick: () => { muteSite(); clearXray(); unmount(); } }),
-      ]),
-    ]);
-    mount(card, false);
+      reasonList(s ? 1 : settings.light ? 2 : 3),
+      s ? doNowTip() : playbook(),
+    ];
+    if (!s) {
+      children.push(el("div", { class: "tip", text: T("otp_tip") }));
+      children.push(reportBox());
+    }
+    const row = [
+      el("button", { text: T("dismiss"), onclick: () => { recordDismissal(); unmount(); } }),
+      el("button", { text: T("ask_family"), onclick: () => window.open(whatsappUrl(), "_blank", "noopener") }),
+      readAloudButton(),
+    ];
+    if (!s) row.push(el("button", { text: T("not_scam"), onclick: () => { muteSite(); clearXray(); unmount(); } }));
+    children.push(el("div", { class: "row" }, row));
+    mount(el("div", { class: "card", role: "alert" }, children), false);
   }
 
   function clearXray() {
@@ -294,17 +332,18 @@
 
   // ---------- payment pause ----------
   function pausePayment(button) {
+    const s = settings.simple;
     let secs = settings.light ? 0 : COOLING_SECONDS;
     const guided = el("div", { class: "tip", text: "", hidden: "" });
-    const cont = el("button", { text: "" });
+    const cont = el("button", { text: "", class: s ? "linkish" : "" });
     const tick = () => {
       cont.disabled = secs > 0;
-      cont.textContent = secs > 0 ? "Continue anyway (" + secs + ")" : "Continue anyway";
+      cont.textContent = secs > 0 ? T("cont_wait", { n: secs }) : T("cont");
     };
     tick();
     const iv = setInterval(() => { if (secs > 0) { secs--; tick(); } else clearInterval(iv); }, 1000);
 
-    const close = () => { clearInterval(iv); unmount(); };
+    const close = () => { clearInterval(iv); if ("speechSynthesis" in window) speechSynthesis.cancel(); unmount(); };
     cont.addEventListener("click", () => {
       if (secs > 0) return;
       close();
@@ -312,30 +351,37 @@
       button.click();
     });
 
-    const yes = el("button", { text: "Yes, someone is guiding me", onclick: () => {
+    const yes = el("button", { text: s ? T("yes") : T("yes_long"), onclick: () => {
       guided.hidden = false;
-      guided.textContent = "Please hang up. Real banks, police and courts never ask you to pay like this. Call your bank on the number printed on your card, or talk to family first.";
+      guided.textContent = T("hangup");
     } });
-    const no = el("button", { text: "No", onclick: () => { guided.hidden = true; } });
+    const no = el("button", { text: T("no"), onclick: () => { guided.hidden = true; } });
 
-    const card = el("div", { class: "card", role: "alertdialog", "aria-modal": "true" }, [
-      el("h2", {}, [el("span", { class: "shield", text: "\u{1F6E1}\uFE0F" }), document.createTextNode("It looks like you're about to be robbed. Want help?")]),
+    const children = [
+      el("h2", {}, [el("span", { class: "shield", text: "\u{1F6E1}\uFE0F" }), document.createTextNode(T("pause_title"))]),
       typeBadge(),
-      reasonList(3),
-      el("div", { text: "Is someone on the phone or chat telling you to make this payment?" }),
+      reasonList(s ? 1 : 3),
+      el("div", { text: T("pause_question") }),
       el("div", { class: "row" }, [yes, no]),
       guided,
-      playbook(),
+      s ? doNowTip() : playbook(),
       el("div", { class: "row" }, [
-        el("button", { class: "safe", text: "Cancel payment", onclick: close }),
-        el("button", { text: "Ask family", onclick: () => window.open(whatsappUrl(), "_blank", "noopener") }),
-        cont,
+        el("button", { class: "safe", text: T("cancel"), onclick: close }),
+        el("button", { text: T("ask_family"), onclick: () => window.open(whatsappUrl(), "_blank", "noopener") }),
+        readAloudButton(),
+        ...(s ? [] : [cont]),
       ]),
-      reportBox(),
-      el("div", { class: "row" }, [
-        el("button", { text: "Not a scam, don't warn on this site", onclick: () => { close(); muteSite(); clearXray(); allowed.add(button); button.click(); } }),
-      ]),
-    ]);
+    ];
+    if (!s) {
+      children.push(reportBox());
+      children.push(el("div", { class: "row" }, [
+        el("button", { text: T("not_scam_site"), onclick: () => { close(); muteSite(); clearXray(); allowed.add(button); button.click(); } }),
+      ]));
+    } else {
+      // "Continue anyway" always exists, but small and last, so it is never the easy tap.
+      children.push(el("div", { class: "row" }, [cont]));
+    }
+    const card = el("div", { class: "card", role: "alertdialog", "aria-modal": "true" }, children);
     const root = mount(card, true);
     const first = root.querySelector(".safe");
     if (first) first.focus();
@@ -362,7 +408,7 @@
     chrome.storage.sync.set({ mutedSites: settings.mutedSites });
   }
 
-  chrome.storage.sync.get({ enabled: true, light: false, mutedSites: [], familyNumber: "" }, (s) => {
+  chrome.storage.sync.get({ enabled: true, light: false, simple: false, lang: "en", mutedSites: [], familyNumber: "" }, (s) => {
     Object.assign(settings, s);
     start();
   });

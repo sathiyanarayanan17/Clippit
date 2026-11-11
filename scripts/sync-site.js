@@ -7,6 +7,7 @@ const path = require("path");
 const root = path.join(__dirname, "..");
 const pairs = [
   ["extension/detector.js", "site/detector.js"],
+  ["extension/i18n.js", "site/i18n.js"],
   ["eval/dataset.json", "site/dataset.json"],
 ];
 const check = process.argv.includes("--check");

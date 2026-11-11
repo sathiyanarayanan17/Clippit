@@ -15,7 +15,8 @@
       "Scan this QR code to receive your payment of Rs 8,000.",
       "GST notice: your registration will be cancelled and a penalty of Rs 25,000 applies. Pay now at http://gst-pay.top",
       "Your business loan of 10 lakh is pre-approved. Pay Rs 5,000 processing fee and insurance to release it.",
-      "I sent Rs 15,000 to your number by mistake. Please send it back urgently."
+      "I sent Rs 15,000 to your number by mistake. Please send it back urgently.",
+      "Dear customer, your HDFC netbanking will be blocked today. Login at https://hdfcbank-secure-login.com to avoid suspension."
     ],
     "normal": [
       "Rs 540.00 debited from A/c XX1122 on 08-Nov. Ref no 77123456.",
@@ -31,7 +32,10 @@
       "GST return for October is due on 20 Nov. File on the official portal gst.gov.in.",
       "We will dispatch your goods tomorrow morning. Tracking number 88213.",
       "Your loan EMI of Rs 6,200 is due on 5 Dec. Autopay is active.",
-      "Scan the QR code at the counter to pay Rs 350 to the shop."
+      "Scan the QR code at the counter to pay Rs 350 to the shop.",
+      "Log in at https://www.hdfcbank.com to view your statement.",
+      "Open https://retail.onlinesbi.sbi/ to see your passbook. Never share your password with anyone.",
+      "Track your order at https://www.amazon.in/orders anytime."
     ]
   },
   "holdout": {

@@ -6,9 +6,13 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   $("host").textContent = host || "this site";
   $("muted").disabled = !host;
 
-  chrome.storage.sync.get({ enabled: true, light: false, mutedSites: [], familyNumber: "" }, (s) => {
+  chrome.storage.sync.get({ enabled: true, light: false, simple: false, lang: "en", mutedSites: [], familyNumber: "" }, (s) => {
+    $("lang").value = s.lang;
+    $("lang").onchange = () => chrome.storage.sync.set({ lang: $("lang").value });
     $("enabled").checked = s.enabled;
     $("light").checked = s.light;
+    $("simple").checked = s.simple;
+    $("simple").onchange = () => chrome.storage.sync.set({ simple: $("simple").checked });
     $("muted").checked = s.mutedSites.includes(host);
     $("family").value = s.familyNumber;
     $("family").onchange = () => chrome.storage.sync.set({ familyNumber: $("family").value.replace(/\D/g, "") });
