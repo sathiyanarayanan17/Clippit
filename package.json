@@ -8,9 +8,11 @@
     "icons": "node scripts/make-icons.js",
     "serve": "npx --yes serve@14.2.4 site",
     "test": "node eval/run.js && node eval/types.js && node eval/i18n.js && node eval/properties.js && node scripts/sync-site.js --check",
-    "eval": "node eval/run.js --verbose"
+    "eval": "node eval/run.js --verbose",
+    "e2e": "node e2e/run.js"
   },
   "devDependencies": {
-    "fast-check": "4.10.2"
+    "fast-check": "4.10.2",
+    "playwright-core": "1.65.0"
   }
 }

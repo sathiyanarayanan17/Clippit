@@ -201,7 +201,7 @@
   }
 
   // "What usually happens next" + what to do now
-  function playbook() {
+  function playbook(open = true) {
     const t = current.scamType;
     if (!t) return el("span");
     const ol = el("ol");
@@ -211,7 +211,7 @@
       ol,
       el("div", { class: "tip", text: T("do_now") + " " + I18N.typeInfo(settings.lang, t).doNow }),
     ]);
-    if (!settings.light) d.open = true;
+    if (open && !settings.light) d.open = true;
     return d;
   }
 
@@ -240,8 +240,8 @@
       }
       window.open(PORTAL, "_blank", "noopener");
     } });
-    return el("div", { class: "report" }, [
-      el("strong", { text: T("report_title") }),
+    return el("details", { class: "report" }, [
+      el("summary", { text: T("report_title") }),
       el("div", { text: T("report_text") }),
       el("div", { class: "row" }, [
         copyOpen,
@@ -360,11 +360,11 @@
     const children = [
       el("h2", {}, [el("span", { class: "shield", text: "\u{1F6E1}\uFE0F" }), document.createTextNode(T("pause_title"))]),
       typeBadge(),
-      reasonList(s ? 1 : 3),
+      reasonList(s ? 1 : 2),
       el("div", { text: T("pause_question") }),
       el("div", { class: "row" }, [yes, no]),
       guided,
-      s ? doNowTip() : playbook(),
+      s ? doNowTip() : el("span"),
       el("div", { class: "row" }, [
         el("button", { class: "safe", text: T("cancel"), onclick: close }),
         el("button", { text: T("ask_family"), onclick: () => window.open(whatsappUrl(), "_blank", "noopener") }),
@@ -373,6 +373,7 @@
       ]),
     ];
     if (!s) {
+      children.push(playbook(false)); // below the buttons and collapsed, so the main actions stay on screen
       children.push(reportBox());
       children.push(el("div", { class: "row" }, [
         el("button", { text: T("not_scam_site"), onclick: () => { close(); muteSite(); clearXray(); allowed.add(button); button.click(); } }),

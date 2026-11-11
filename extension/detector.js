@@ -184,7 +184,7 @@
       label: "Asks you to send money (Hindi)",
       why: "Be careful when an unexpected message asks you to send money." },
     { id: "hi_safe_account", cat: "money", w: 4, negatable: true, hi: true,
-      re: /(surakshit|safe|secure)\s*(khata|account)|सुरक्षित खाता/i,
+      re: /surakshit\s*khata|सुरक्षित खाता/i,
       label: "Asks you to move money to a 'safe account' (Hindi)",
       why: "There is no such thing. Money sent to a 'safe account' goes to the scammer." },
     { id: "hi_prize", cat: "money", w: 2.5, negatable: true, hi: true,
@@ -438,6 +438,17 @@
     if (cats.size >= 3) total *= 1.25;
     total = Math.max(0, Math.round(total * 100) / 100);
     reasons.sort((a, b) => b.w - a.w);
+    // The same phrase can match an English and a Hindi rule. Show it once.
+    const seenMatch = new Set();
+    const unique = [];
+    for (const r of reasons) {
+      const k = r.match.toLowerCase().trim();
+      if (seenMatch.has(k)) continue;
+      seenMatch.add(k);
+      unique.push(r);
+    }
+    reasons.length = 0;
+    reasons.push(...unique);
     const level = total >= THRESHOLD_SCAM ? "scam" : total >= THRESHOLD_SUSPICIOUS ? "suspicious" : "safe";
     const scamType = level === "safe" ? null : classify([...byId.values()]);
     return { score: total, level, reasons, scamType };

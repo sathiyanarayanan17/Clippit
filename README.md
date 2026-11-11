@@ -36,7 +36,14 @@ Web app: run `npm run serve` and open the printed address.
 ```
 npm test
 ```
-Runs the evaluation (fails if the holdout set has any false alarm), the scam-type checks, and a check that `site/` copies match the source. After editing `extension/detector.js`, run `npm run sync`.
+Runs the evaluation (fails if the holdout set has any false alarm), the scam-type and link checks, language completeness, eight property-based tests, and a check that `site/` copies match the source. After editing `extension/detector.js` or `extension/i18n.js`, run `npm run sync`.
+
+Real-browser test (loads the actual extension into Chromium and checks the demo pages, the pause, Hindi and Grandpa Mode, and the web app):
+```
+npx playwright-core install chromium   # one time
+npm run e2e
+```
+Branded Chrome and Edge ignore the command-line flag that loads unpacked extensions, so the test uses the open-source Chromium build.
 
 ## Honest results and limits
 - Hand-written test set, not real traffic. Latest run: tune 8/8 caught, 0/8 false alarms; holdout 13/15 caught, 0/15 false alarms.
