@@ -9,7 +9,13 @@
       "Please install AnyDesk and tell me the code so I can process your refund.",
       "You have won the lucky draw! Pay a Rs 2,000 processing fee to claim your prize.",
       "Approve the collect request and enter your UPI PIN to receive Rs 1,500 cashback.",
-      "Guaranteed returns: double your money in 10 days. Send USDT to this crypto wallet."
+      "Guaranteed returns: double your money in 10 days. Send USDT to this crypto wallet.",
+      "Sir, our bank details have changed. Please transfer the pending invoice amount of Rs 1,20,000 to the new account immediately.",
+      "Payment done sir. Screenshot sent. It will reflect in 2 hours, please dispatch the goods now.",
+      "Scan this QR code to receive your payment of Rs 8,000.",
+      "GST notice: your registration will be cancelled and a penalty of Rs 25,000 applies. Pay now at http://gst-pay.top",
+      "Your business loan of 10 lakh is pre-approved. Pay Rs 5,000 processing fee and insurance to release it.",
+      "I sent Rs 15,000 to your number by mistake. Please send it back urgently."
     ],
     "normal": [
       "Rs 540.00 debited from A/c XX1122 on 08-Nov. Ref no 77123456.",
@@ -19,7 +25,13 @@
       "Never share your OTP, PIN or CVV with anyone. Banks will never ask for them.",
       "Thank you for your payment of Rs 999. Transaction ID TXN4412.",
       "Can you send me the notes from yesterday's class?",
-      "Rs 25,000 credited to your account XX9981. Salary for November."
+      "Rs 25,000 credited to your account XX9981. Salary for November.",
+      "Invoice 2231 for Rs 45,000 is attached. Please pay by 30 Nov to the account on your purchase order.",
+      "Payment of Rs 8,000 received from Ravi Traders. Thank you.",
+      "GST return for October is due on 20 Nov. File on the official portal gst.gov.in.",
+      "We will dispatch your goods tomorrow morning. Tracking number 88213.",
+      "Your loan EMI of Rs 6,200 is due on 5 Dec. Autopay is active.",
+      "Scan the QR code at the counter to pay Rs 350 to the shop."
     ]
   },
   "holdout": {

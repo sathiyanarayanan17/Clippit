@@ -1,14 +1,14 @@
 {
   "enabled": true,
   "name": "Clippit quiet-guard check",
-  "description": "Re-runs the evaluation whenever the detector or dataset changes. Fails if the holdout set has any false alarm.",
-  "version": "1",
+  "description": "Re-runs the evaluation, scam-type checks and property-based tests whenever the detector or dataset changes. Fails if the holdout set has any false alarm.",
+  "version": "2",
   "when": {
     "type": "fileEdited",
-    "patterns": ["extension/detector.js", "eval/dataset.json"]
+    "patterns": ["extension/detector.js", "eval/dataset.json", "eval/properties.js"]
   },
   "then": {
     "type": "runCommand",
-    "command": "node eval/run.js"
+    "command": "npm run sync && npm test"
   }
 }

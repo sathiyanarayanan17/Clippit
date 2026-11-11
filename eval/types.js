@@ -9,6 +9,10 @@ const cases = [
   ["Please install AnyDesk and tell me the code so I can process your refund.", "remote_access"],
   ["Approve the collect request and enter your UPI PIN to receive Rs 1,500 cashback.", "upi_collect"],
   ["Guaranteed returns: double your money in 10 days. Send USDT to this crypto wallet.", "invest_job"],
+  ["Sir, our bank details have changed. Please transfer the pending invoice amount of Rs 1,20,000 to the new account immediately.", "bank_change"],
+  ["Payment done sir. Screenshot sent. It will reflect in 2 hours, please dispatch the goods now.", "fake_paid"],
+  ["Scan this QR code to receive your payment of Rs 8,000.", "qr_receive"],
+  ["I sent Rs 15,000 to your number by mistake. Please send it back urgently.", "sent_by_mistake"],
 ];
 
 let ok = 0;

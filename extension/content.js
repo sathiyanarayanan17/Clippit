@@ -23,7 +23,7 @@
   const PORTAL = "https://cybercrime.gov.in";
   const CHAKSHU = "https://sancharsaathi.gov.in/sfc/";
 
-  const settings = { enabled: true, light: false, mutedSites: [] };
+  const settings = { enabled: true, light: false, mutedSites: [], familyNumber: "" };
   const hits = new Map(); // id -> hit, accumulated across the page
   const seen = new Set(); // lines already scanned
   const allowed = new WeakSet(); // buttons the user chose to continue on
@@ -245,7 +245,8 @@
   function whatsappUrl() {
     const why = current.reasons.slice(0, 3).map((r) => "- " + r.label).join("\n");
     const msg = "Hold on, I might be getting scammed. Please call me.\nPage: " + location.hostname + "\nWhy Clippit is worried:\n" + why;
-    return "https://wa.me/?text=" + encodeURIComponent(msg);
+    const digits = String(settings.familyNumber || "").replace(/\D/g, "");
+    return "https://wa.me/" + digits + "?text=" + encodeURIComponent(msg);
   }
 
   // ---------- interruption budget ----------
@@ -361,7 +362,7 @@
     chrome.storage.sync.set({ mutedSites: settings.mutedSites });
   }
 
-  chrome.storage.sync.get({ enabled: true, light: false, mutedSites: [] }, (s) => {
+  chrome.storage.sync.get({ enabled: true, light: false, mutedSites: [], familyNumber: "" }, (s) => {
     Object.assign(settings, s);
     start();
   });

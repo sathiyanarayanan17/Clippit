@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Rules need a test",
+  "description": "When a signal is added or changed in the detector, remind the agent to add a tune-set example and a harmless look-alike sentence, and to keep the holdout untouched.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["extension/detector.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "extension/detector.js changed. Check the diff. For every new or changed signal: (1) make sure eval/dataset.json 'tune' has at least one scam example and one harmless look-alike that must stay quiet; (2) make sure nothing was tuned using the 'holdout' set; (3) make sure the scam type and playbook in TYPES still match. Report anything missing instead of silently fixing the holdout."
+  }
+}

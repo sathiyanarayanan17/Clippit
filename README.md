@@ -45,10 +45,12 @@ Runs the evaluation (fails if the holdout set has any false alarm), the scam-typ
 - The phone version only checks messages the user shares. Only the extension can pause a payment.
 
 ## Built with Kiro
-Specs, steering and a hook live in `.kiro/`:
+Specs, steering, hooks and a custom agent live in `.kiro/`:
 - `.kiro/specs/clippit/` requirements and tasks with "done when" tests.
 - `.kiro/steering/` the quiet-guard rules (false alarms are worse than misses, never tune on the holdout).
-- `.kiro/hooks/` re-runs the evaluation whenever the detector or dataset changes.
+- `.kiro/hooks/` one hook re-runs sync and all tests whenever the detector or dataset changes; another asks the agent to check that every rule change has a matching test example.
+- `.kiro/agents/rule-reviewer.json` a read-only custom agent that reviews rule changes against the steering policy.
+- Property-based tests (`eval/properties.js`, using fast-check) check rules that must hold for any input, such as "harmless text is always safe", "negated warnings are never flagged" and "no input makes a check slow".
 
 ## Roadmap
 Lookalike link check, simple mode, read aloud, screenshot check, payee warning, family alert, and an "Answering Machine" call screener.
